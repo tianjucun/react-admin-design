@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Layout as AntLayout, Menu, Avatar, Dropdown, message } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-  TeamOutlined,
-  MenuOutlined,
-  FileTextOutlined
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
+import { convertToMenuItems } from '../../utils/menu';
 import './index.css';
 
 const { Header, Sider, Content } = AntLayout;
@@ -22,28 +19,14 @@ const Layout = () => {
   const location = useLocation();
   const { userInfo, logout } = useAuthStore();
 
-  const menuItems = [
-    {
-      key: '/system/user',
-      icon: <UserOutlined />,
-      label: '用户管理'
-    },
-    {
-      key: '/system/role',
-      icon: <TeamOutlined />,
-      label: '角色管理'
-    },
-    {
-      key: '/system/menu',
-      icon: <MenuOutlined />,
-      label: '菜单管理'
-    },
-    {
-      key: '/system/log',
-      icon: <FileTextOutlined />,
-      label: '操作日志'
+  // 将拍平的菜单数据转换为 Ant Design Menu 需要的树形结构
+  const menuItems = useMemo(() => {
+    if (!userInfo?.menus || userInfo.menus.length === 0) {
+      return [];
     }
-  ];
+    // 使用工具函数将拍平的菜单转换为树形结构
+    return convertToMenuItems(userInfo.menus, true);
+  }, [userInfo?.menus]);
 
   const userMenuItems = [
     {
@@ -60,7 +43,10 @@ const Layout = () => {
   ];
 
   const handleMenuClick = ({ key }) => {
-    navigate(key);
+    // 菜单路径已经是完整路径（如 /system/user），直接导航
+    if (key) {
+      navigate(key);
+    }
   };
 
   const handleUserMenuClick = ({ key }) => {
@@ -81,6 +67,7 @@ const Layout = () => {
           theme="dark"
           mode="inline"
           selectedKeys={[location.pathname]}
+          defaultOpenKeys={menuItems.map(item => item.key).filter(Boolean)}
           items={menuItems}
           onClick={handleMenuClick}
         />
