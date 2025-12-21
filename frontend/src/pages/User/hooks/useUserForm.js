@@ -1,28 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { message } from 'antd';
 import * as userApi from '../../../api/user';
-import * as roleApi from '../../../api/role';
 
 /**
  * 用户表单业务逻辑 Hook
  * 负责用户创建、更新、删除、状态变更等业务逻辑
  */
 const useUserForm = (onSuccess) => {
-  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  // 获取角色列表
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const roleList = await roleApi.getRoleList();
-        setRoles(roleList || []);
-      } catch (error) {
-        console.error('获取角色列表失败:', error);
-      }
-    };
-    fetchRoles();
-  }, []);
 
   // 创建用户
   const createUser = useCallback(
@@ -113,7 +98,6 @@ const useUserForm = (onSuccess) => {
   );
 
   return {
-    roles,
     loading,
     createUser,
     updateUser,

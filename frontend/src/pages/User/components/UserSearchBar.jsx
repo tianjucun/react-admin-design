@@ -1,10 +1,11 @@
 import { Input, Space } from 'antd';
+import { memo } from 'react';
 
 /**
  * 用户搜索栏组件
  * 负责用户搜索功能的 UI 展示
  */
-const UserSearchBar = ({ onSearch, keyword }) => {
+const UserSearchBar = memo(({ onSearch, keyword }) => {
   return (
     <Space>
       <Input.Search
@@ -16,7 +17,9 @@ const UserSearchBar = ({ onSearch, keyword }) => {
       />
     </Space>
   );
-};
+});
+
+UserSearchBar.displayName = 'UserSearchBar';
 
 export default UserSearchBar;
 

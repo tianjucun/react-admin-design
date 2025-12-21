@@ -65,7 +65,7 @@ const UserTable = memo(({
       render: (_, record) => {
         const { text, color } = formatUserStatus(record.status);
         const newStatus = toggleUserStatus(record.status);
-        
+
         return (
           <Space>
             <Button
@@ -97,9 +97,9 @@ const UserTable = memo(({
               okText="确定"
               cancelText="取消"
             >
-              <Button 
-                type="link" 
-                danger 
+              <Button
+                type="link"
+                danger
                 icon={<DeleteOutlined />}
                 aria-label="删除用户"
               >

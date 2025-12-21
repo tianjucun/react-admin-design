@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { message } from 'antd';
 import * as userApi from '../../../api/user';
 import { DEFAULT_PAGINATION } from '../constants';
@@ -22,7 +22,7 @@ const useUserList = () => {
       const result = await userApi.getUserList({
         page: current,
         pageSize,
-        keyword
+        keyword,
       });
       setDataSource(result.list || []);
       setTotal(result.total || 0);
@@ -40,12 +40,15 @@ const useUserList = () => {
   }, [fetchUserList]);
 
   // 更新分页
-  const handlePageChange = useCallback((page, size) => {
-    setCurrent(page);
-    if (size !== pageSize) {
-      setPageSize(size);
-    }
-  }, [pageSize]);
+  const handlePageChange = useCallback(
+    (page, size) => {
+      setCurrent(page);
+      if (size !== pageSize) {
+        setPageSize(size);
+      }
+    },
+    [pageSize]
+  );
 
   // 更新搜索关键词
   const handleSearch = useCallback((value) => {
@@ -64,14 +67,13 @@ const useUserList = () => {
     total,
     pagination: {
       current,
-      pageSize
+      pageSize,
     },
     keyword,
     handlePageChange,
     handleSearch,
-    refresh
+    refresh,
   };
 };
 
 export default useUserList;
-

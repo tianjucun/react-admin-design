@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import useUserList from './hooks/useUserList';
@@ -32,7 +32,7 @@ const User = () => {
 
   // 表单相关逻辑（CRUD 操作）
   const {
-    roles,
+    loading: submitUserIsLoading,
     deleteUser,
     updateUserStatus,
     handleSubmit: submitUser
@@ -43,6 +43,8 @@ const User = () => {
     modalVisible,
     editingUser,
     form,
+    roles,
+    rolesLoading,
     handleAdd,
     handleEdit,
     handleCancel,
@@ -99,7 +101,9 @@ const User = () => {
       <UserModal
         open={modalVisible}
         editingUser={editingUser}
+        loading={submitUserIsLoading}
         roles={roles}
+        rolesLoading={rolesLoading}
         form={form}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
@@ -114,5 +118,6 @@ const User = () => {
   );
 };
 
-export default User;
+User.displayName = 'User';
 
+export default User;
