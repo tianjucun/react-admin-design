@@ -3,12 +3,22 @@ const { Role, Menu, RoleMenu } = require('../models');
 /**
  * 获取角色列表
  */
-const getRoleList = async () => {
-  const roles = await Role.findAll({
-    order: [['createdAt', 'DESC']]
+const getRoleList = async (params) => {
+  const { page = 1, pageSize = 10 } = params;
+  const offset = (page - 1) * pageSize;
+
+  const { count, rows } = await Role.findAndCountAll({
+    offset,
+    limit: pageSize,
+    order: [['createdAt', 'DESC']],
   });
 
-  return roles;
+  return {
+    list: rows,
+    total: count,
+    page,
+    pageSize,
+  };
 };
 
 /**
@@ -16,11 +26,13 @@ const getRoleList = async () => {
  */
 const getRoleDetail = async (id) => {
   const role = await Role.findByPk(id, {
-    include: [{
-      model: Menu,
-      as: 'menus',
-      attributes: ['id']
-    }]
+    include: [
+      {
+        model: Menu,
+        as: 'menus',
+        attributes: ['id'],
+      },
+    ],
   });
 
   if (!role) {
@@ -32,9 +44,9 @@ const getRoleDetail = async (id) => {
     name: role.name,
     code: role.code,
     description: role.description,
-    menuIds: role.menus.map(menu => menu.id),
+    menuIds: role.menus.map((menu) => menu.id),
     createdAt: role.createdAt,
-    updatedAt: role.updatedAt
+    updatedAt: role.updatedAt,
   };
 };
 
@@ -53,7 +65,7 @@ const createRole = async (roleData) => {
   const role = await Role.create({
     name,
     code,
-    description
+    description,
   });
 
   return role;
@@ -81,7 +93,7 @@ const updateRole = async (id, roleData) => {
   await role.update({
     name: name || role.name,
     code: code || role.code,
-    description: description !== undefined ? description : role.description
+    description: description !== undefined ? description : role.description,
   });
 
   return role;
@@ -114,9 +126,7 @@ const assignPermissions = async (roleId, menuIds) => {
 
   // 添加新权限
   if (menuIds && menuIds.length > 0) {
-    await RoleMenu.bulkCreate(
-      menuIds.map(menuId => ({ roleId, menuId }))
-    );
+    await RoleMenu.bulkCreate(menuIds.map((menuId) => ({ roleId, menuId })));
   }
 
   return true;
@@ -128,6 +138,5 @@ module.exports = {
   createRole,
   updateRole,
   deleteRole,
-  assignPermissions
+  assignPermissions,
 };
-

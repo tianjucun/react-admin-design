@@ -6,7 +6,7 @@ const { success, error } = require('../utils/response');
  */
 const getRoleList = async (req, res) => {
   try {
-    const roles = await roleService.getRoleList();
+    const roles = await roleService.getRoleList(req.query);
     res.json(success(roles, '获取成功'));
   } catch (err) {
     res.status(400).json(error(err.message, 400));
@@ -84,6 +84,5 @@ module.exports = {
   createRole,
   updateRole,
   deleteRole,
-  assignPermissions
+  assignPermissions,
 };
-
