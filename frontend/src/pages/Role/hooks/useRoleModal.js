@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { message } from 'antd';
 import * as roleApi from '../../../api/role';
 import * as menuApi from '../../../api/menu';
+import { buildTreeData } from '../../../utils/tree';
 
 const useRoleModal = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,41 +23,21 @@ const useRoleModal = () => {
     setModalVisible(false);
   }, []);
 
-  // 构建树形数据
-  const buildTreeData = useCallback((menus) => {
-    const map = {};
-    const roots = [];
-
-    menus.forEach((menu) => {
-      map[menu.id] = {
-        title: menu.name,
-        key: menu.id,
-        children: [],
-      };
-    });
-
-    menus.forEach((menu) => {
-      if (menu.parentId === 0) {
-        roots.push(map[menu.id]);
-      } else {
-        if (map[menu.parentId]) {
-          map[menu.parentId].children.push(map[menu.id]);
-        }
-      }
-    });
-
-    return roots;
-  }, []);
-
   const fetchMenuTree = useCallback(async () => {
     try {
       const menus = await menuApi.getAllMenus();
-      const treeData = buildTreeData(menus);
+      const treeMenus = menus.map((menu) => ({
+        ...menu,
+        title: menu.name,
+        key: menu.id,
+        children: [],
+      }));
+      const treeData = buildTreeData(treeMenus);
       setMenuTree(treeData);
     } catch (error) {
       message.error('获取菜单列表失败');
     }
-  }, [buildTreeData]);
+  }, []);
 
   const openPermissionModal = useCallback(
     async (record) => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Icons from '@ant-design/icons';
+import { buildTreeData } from './tree';
 
 /**
  * 图标映射表
@@ -29,22 +30,6 @@ const getIcon = (iconName) => {
 };
 
 /**
- * 将拍平的菜单数组转换为树形结构
- * @param {Array} flatMenus - 拍平的菜单数组
- * @param {number} parentId - 父菜单ID，默认为0（根节点）
- * @returns {Array} 树形结构的菜单数组
- */
-const buildMenuTree = (flatMenus, parentId = 0) => {
-  return flatMenus
-    .filter((menu) => menu.parentId === parentId)
-    .map((menu) => ({
-      ...menu,
-      children: buildMenuTree(flatMenus, menu.id),
-    }))
-    .sort((a, b) => a.sort - b.sort);
-};
-
-/**
  * 将菜单数据转换为 Ant Design Menu 组件需要的格式
  * @param {Array} menus - 菜单数组（可以是拍平的或树形的）
  * @param {boolean} isFlat - 是否为拍平的数据，默认true
@@ -56,7 +41,7 @@ const convertToMenuItems = (menus, isFlat = true) => {
   }
 
   // 如果是拍平的数据，先转换为树形结构
-  let menuTree = isFlat ? buildMenuTree(menus) : menus;
+  let menuTree = isFlat ? buildTreeData(menus) : menus;
 
   // 过滤掉按钮类型的菜单（只显示目录和菜单）
   menuTree = menuTree.filter((menu) => menu.type !== 3);
@@ -109,4 +94,4 @@ const getMenuPaths = (flatMenus) => {
     .map((menu) => menu.path);
 };
 
-export { buildMenuTree, convertToMenuItems, getMenuPaths, getIcon, IconMap };
+export { convertToMenuItems, getMenuPaths, getIcon, IconMap };
