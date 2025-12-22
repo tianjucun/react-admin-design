@@ -1,6 +1,11 @@
 import { useState, useCallback } from 'react';
 import { message } from 'antd';
-import * as userApi from '../../../api/user';
+import {
+  createUser,
+  updateUser,
+  deleteUser,
+  updateUserStatus,
+} from '@/api/user';
 
 /**
  * 用户表单业务逻辑 Hook
@@ -10,11 +15,11 @@ const useUserForm = (onSuccess) => {
   const [loading, setLoading] = useState(false);
 
   // 创建用户
-  const createUser = useCallback(
+  const handleCreateUser = useCallback(
     async (values) => {
       setLoading(true);
       try {
-        await userApi.createUser(values);
+        await createUser(values);
         message.success('创建成功');
         onSuccess?.();
         return true;
@@ -29,11 +34,11 @@ const useUserForm = (onSuccess) => {
   );
 
   // 更新用户
-  const updateUser = useCallback(
+  const handleUpdateUser = useCallback(
     async (id, values) => {
       setLoading(true);
       try {
-        await userApi.updateUser(id, values);
+        await updateUser(id, values);
         message.success('更新成功');
         onSuccess?.();
         return true;
@@ -48,11 +53,11 @@ const useUserForm = (onSuccess) => {
   );
 
   // 删除用户
-  const deleteUser = useCallback(
+  const handleDeleteUser = useCallback(
     async (id) => {
       setLoading(true);
       try {
-        await userApi.deleteUser(id);
+        await deleteUser(id);
         message.success('删除成功');
         onSuccess?.();
         return true;
@@ -67,11 +72,11 @@ const useUserForm = (onSuccess) => {
   );
 
   // 更新用户状态
-  const updateUserStatus = useCallback(
+  const handleUpdateUserStatus = useCallback(
     async (id, status) => {
       setLoading(true);
       try {
-        await userApi.updateUserStatus(id, status);
+        await updateUserStatus(id, status);
         message.success('状态更新成功');
         onSuccess?.();
         return true;
@@ -99,10 +104,10 @@ const useUserForm = (onSuccess) => {
 
   return {
     loading,
-    createUser,
-    updateUser,
-    deleteUser,
-    updateUserStatus,
+    createUser: handleCreateUser,
+    updateUser: handleUpdateUser,
+    deleteUser: handleDeleteUser,
+    updateUserStatus: handleUpdateUserStatus,
     handleSubmit,
   };
 };

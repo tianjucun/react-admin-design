@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import * as roleApi from '../../../api/role';
+import { assignPermissions } from '@/api/role';
 import { message } from 'antd';
 
 const useRoleAssignPermissionsTree = ({
@@ -11,7 +11,7 @@ const useRoleAssignPermissionsTree = ({
   const handleSavePermissions = useCallback(async () => {
     setLoading(true);
     try {
-      await roleApi.assignPermissions(editingRoleId, checkedKeys);
+      await assignPermissions(editingRoleId, checkedKeys);
       message.success('权限分配成功');
       onSuccess();
     } catch (err) {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Form } from 'antd';
-import * as roleApi from '../../../api/role';
+import { getRoleList } from '@/api/role';
 
 /**
  * 用户模态框业务逻辑 Hook
@@ -37,7 +37,7 @@ const useUserModal = () => {
     loadingRef.current = true;
     setRolesLoading(true);
     try {
-      const roleList = await roleApi.getRoleList({
+      const roleList = await getRoleList({
         page: 1,
         pageSize: Number.MAX_SAFE_INTEGER,
       });

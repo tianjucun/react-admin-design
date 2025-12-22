@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import * as roleApi from '../../../api/role';
 import { Form, message } from 'antd';
 
 const useRoleForm = () => {
@@ -9,7 +8,7 @@ const useRoleForm = () => {
   const createRole = useCallback(async (values) => {
     setLoading(true);
     try {
-      await roleApi.createRole(values);
+      await createRole(values);
       message.success('创建成功');
       return true;
     } catch (err) {
@@ -23,7 +22,7 @@ const useRoleForm = () => {
   const updateRole = useCallback(async (id, values) => {
     setLoading(true);
     try {
-      await roleApi.updateRole(id, values);
+      await updateRole(id, values);
       message.success('更新成功');
       return true;
     } catch (err) {
@@ -48,7 +47,7 @@ const useRoleForm = () => {
   const deleteRole = useCallback(async (id) => {
     setLoading(true);
     try {
-      await roleApi.deleteRole(id);
+      await deleteRole(id);
       message.success('删除成功');
       return true;
     } catch (err) {

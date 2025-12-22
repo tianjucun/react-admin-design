@@ -1,11 +1,17 @@
 import { create } from 'zustand';
-import { getToken, getUserInfo, setToken, setUserInfo, removeToken } from '../utils/auth';
-import * as authApi from '../api/auth';
+import {
+  getToken,
+  getUserInfo,
+  setToken,
+  setUserInfo,
+  removeToken,
+} from '@/utils/auth';
+import * as authApi from '@/api/auth';
 
 const useAuthStore = create((set) => ({
   token: getToken(),
   userInfo: getUserInfo(),
-  
+
   // 登录
   login: async (username, password) => {
     try {
@@ -18,7 +24,7 @@ const useAuthStore = create((set) => ({
       throw error;
     }
   },
-  
+
   // 获取用户信息
   fetchUserInfo: async () => {
     try {
@@ -30,7 +36,7 @@ const useAuthStore = create((set) => ({
       throw error;
     }
   },
-  
+
   // 退出登录
   logout: async () => {
     try {
@@ -42,8 +48,7 @@ const useAuthStore = create((set) => ({
       set({ token: null, userInfo: null });
       window.location.href = '/login';
     }
-  }
+  },
 }));
 
 export default useAuthStore;
-

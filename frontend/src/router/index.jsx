@@ -1,11 +1,11 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { getToken } from '../utils/auth';
-import Login from '../pages/Login';
-import Layout from '../components/Layout';
-import User from '../pages/User';
-import Role from '../pages/Role';
-import Menu from '../pages/Menu';
-import Log from '../pages/Log';
+import { getToken } from '@/utils/auth';
+import Login from '@/pages/Login';
+import Layout from '@/components/Layout';
+import User from '@/pages/User';
+import Role from '@/pages/Role';
+import Menu from '@/pages/Menu';
+import Log from '@/pages/Log';
 
 // 路由守卫
 const PrivateRoute = ({ children }) => {

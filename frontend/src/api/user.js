@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 /**
  * 获取用户列表
@@ -34,4 +34,3 @@ export const deleteUser = (id) => {
 export const updateUserStatus = (id, status) => {
   return request.put(`/users/${id}/status`, { status });
 };
-

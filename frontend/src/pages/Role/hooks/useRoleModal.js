@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { message } from 'antd';
-import * as roleApi from '../../../api/role';
-import * as menuApi from '../../../api/menu';
-import { buildTreeData } from '../../../utils/tree';
+import { getRoleDetail } from '@/api/role';
+import { getMenuTree } from '@/api/menu';
+import { buildTreeData } from '@/utils/tree';
 
 const useRoleModal = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,7 +25,7 @@ const useRoleModal = () => {
 
   const fetchMenuTree = useCallback(async () => {
     try {
-      const menus = await menuApi.getAllMenus();
+      const menus = await getMenuTree();
       const treeMenus = menus.map((menu) => ({
         ...menu,
         title: menu.name,
@@ -42,7 +42,7 @@ const useRoleModal = () => {
   const openPermissionModal = useCallback(
     async (record) => {
       try {
-        const detail = await roleApi.getRoleDetail(record.id);
+        const detail = await getRoleDetail(record.id);
         setCheckedKeys(detail.menuIds || []);
         await fetchMenuTree();
         setPermissionModalVisible(true);

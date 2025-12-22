@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 /**
  * 获取菜单树
@@ -34,4 +34,3 @@ export const updateMenu = (id, data) => {
 export const deleteMenu = (id) => {
   return request.delete(`/menus/${id}`);
 };
-

@@ -7,8 +7,8 @@ import {
   LogoutOutlined
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import useAuthStore from '../../store/authStore';
-import { convertToMenuItems } from '../../utils/menu';
+import useAuthStore from '@/store/authStore';
+import { convertToMenuItems } from '@/utils/menu';
 import './index.css';
 
 const { Header, Sider, Content } = AntLayout;

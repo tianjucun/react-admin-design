@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { message } from 'antd';
-import * as userApi from '../../../api/user';
+import { getUserList } from '@/api/user';
 import { DEFAULT_PAGINATION } from '../constants';
 
 /**
@@ -19,7 +19,7 @@ const useUserList = () => {
   const fetchUserList = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await userApi.getUserList({
+      const result = await getUserList({
         page: current,
         pageSize,
         keyword,

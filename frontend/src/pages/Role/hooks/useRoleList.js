@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { message } from 'antd';
-import * as roleApi from '../../../api/role';
+import { getRoleList } from '@/api/role';
 
 export const useRoleList = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -12,7 +12,7 @@ export const useRoleList = () => {
   const fetchRoleList = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await roleApi.getRoleList({
+      const result = await getRoleList({
         page: current,
         pageSize,
       });

@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 /**
  * 用户登录
@@ -20,4 +20,3 @@ export const getInfo = () => {
 export const logout = () => {
   return request.post('/auth/logout');
 };
-

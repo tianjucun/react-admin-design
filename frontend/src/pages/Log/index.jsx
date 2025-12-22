@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Input, DatePicker, Space, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import * as logApi from '../../api/log';
+import { getLogList } from '@/api/log';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -30,7 +30,7 @@ const Log = () => {
         params.endDate = dateRange[1].format('YYYY-MM-DD');
       }
 
-      const result = await logApi.getLogList(params);
+      const result = await getLogList(params);
       setDataSource(result.list);
       setTotal(result.total);
     } catch (error) {

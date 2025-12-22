@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 /**
  * 获取日志列表
@@ -6,4 +6,3 @@ import request from '../utils/request';
 export const getLogList = (params) => {
   return request.get('/logs', { params });
 };
-

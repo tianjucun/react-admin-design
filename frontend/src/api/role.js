@@ -1,4 +1,4 @@
-import request from '../utils/request';
+import request from '@/utils/request';
 
 /**
  * 获取角色列表
@@ -41,4 +41,3 @@ export const deleteRole = (id) => {
 export const assignPermissions = (id, menuIds) => {
   return request.post(`/roles/${id}/permissions`, { menuIds });
 };
-
