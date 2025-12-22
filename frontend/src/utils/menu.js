@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Icons from '@ant-design/icons';
 import { buildTreeData } from './tree';
+import { MenuType } from '@/constance';
 
 /**
  * 图标映射表
@@ -29,6 +30,22 @@ const getIcon = (iconName) => {
   return IconComponent ? React.createElement(IconComponent) : null;
 };
 
+export const filterDirectoryMenu = (menus = []) => {
+  return menus.filter((menu) => menu.type === MenuType.DIRECTORY);
+};
+
+export const filterMenu = (menus = []) => {
+  return menus.filter((menu) => menu.type === MenuType.MENU);
+};
+
+export const filterNotButtonMenu = (menus = []) => {
+  return menus.filter((menu) => menu.type !== MenuType.BUTTON);
+};
+
+export const filterButtonMenu = (menus = []) => {
+  return menus.filter((menu) => menu.type === MenuType.BUTTON);
+};
+
 /**
  * 将菜单数据转换为 Ant Design Menu 组件需要的格式
  * @param {Array} menus - 菜单数组（可以是拍平的或树形的）
@@ -44,7 +61,7 @@ const convertToMenuItems = (menus, isFlat = true) => {
   let menuTree = isFlat ? buildTreeData(menus) : menus;
 
   // 过滤掉按钮类型的菜单（只显示目录和菜单）
-  menuTree = menuTree.filter((menu) => menu.type !== 3);
+  menuTree = filterNotButtonMenu(menuTree);
 
   // 转换为 Ant Design Menu 格式
   const convertMenu = (menu) => {
@@ -64,9 +81,9 @@ const convertToMenuItems = (menus, isFlat = true) => {
     // 如果有子菜单，递归处理
     if (menu.children && menu.children.length > 0) {
       // 过滤子菜单中的按钮类型
-      const children = menu.children
-        .filter((child) => child.type !== 3)
-        .map((child) => convertMenu(child));
+      const children = filterNotButtonMenu(menu.children).map((child) =>
+        convertMenu(child)
+      );
 
       if (children.length > 0) {
         menuItem.children = children;
@@ -89,8 +106,8 @@ const getMenuPaths = (flatMenus) => {
     return [];
   }
 
-  return flatMenus
-    .filter((menu) => menu.type === 2 && menu.path) // 只获取菜单类型的路径
+  return filterDirectoryMenu(flatMenus)
+    .filter((menu) => menu.path) // 只获取菜单类型的路径
     .map((menu) => menu.path);
 };
 
