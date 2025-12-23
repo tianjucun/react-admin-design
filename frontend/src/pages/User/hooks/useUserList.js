@@ -29,7 +29,9 @@ const useUserList = () => {
       setDataSource(result.list || []);
       setTotal(result.total || 0);
     } catch (error) {
-      message.error('获取用户列表失败');
+      const errorMessage =
+        error?.response?.data?.message || error?.message || '获取用户列表失败';
+      message.error(errorMessage);
       console.error('获取用户列表失败:', error);
     } finally {
       setLoading(false);
@@ -52,29 +54,28 @@ const useUserList = () => {
     [pageSize]
   );
 
-  // 更新搜索关键词
+  // 刷新列表（保持当前分页）
+  const refresh = useCallback(
+    (force = false) => {
+      if (force && current !== DEFAULT_PAGINATION.current) {
+        setCurrent(DEFAULT_PAGINATION.current);
+        return;
+      }
+      fetchUserList();
+    },
+    [current, fetchUserList]
+  );
+
+  // 搜索：重置到第一页并刷新数据
   const handleSearch = useCallback(() => {
-    if (current !== DEFAULT_PAGINATION.current) {
-      setCurrent(DEFAULT_PAGINATION.current);
-      return;
-    }
-    fetchUserList();
-  }, [fetchUserList, current]);
+    refresh(true);
+  }, [refresh]);
 
-  // 刷新列表
-  const refresh = useCallback(() => {
-    console.log('refresh');
-    fetchUserList();
-  }, [fetchUserList]);
-
+  // 重置搜索条件并刷新
   const handleReset = useCallback(() => {
     searchForm.resetFields();
-    if (current !== DEFAULT_PAGINATION.current) {
-      setCurrent(DEFAULT_PAGINATION.current);
-      return;
-    }
-    fetchUserList();
-  }, [searchForm, current, fetchUserList]);
+    refresh(true);
+  }, [searchForm, refresh]);
 
   return {
     searchForm,
