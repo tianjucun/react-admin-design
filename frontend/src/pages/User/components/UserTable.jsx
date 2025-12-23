@@ -1,7 +1,7 @@
-import { memo, useMemo } from 'react';
-import { Table, Button, Space, Popconfirm } from 'antd';
+import { memo, useMemo, useCallback } from 'react';
+import { Table, Button, Space, Popconfirm, Switch } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import { formatUserStatus, toggleUserStatus } from '../utils/formatters';
+import { toggleUserStatus } from '../utils/formatters';
 import { USER_STATUS, TABLE_COLUMNS_CONFIG } from '../constants';
 
 /**
@@ -19,6 +19,56 @@ const UserTable = memo(({
   onDelete,
   onStatusChange
 }) => {
+
+  const renderAction = useCallback((_, record) => {
+    return (
+      <Space>
+        <Button
+          type="link"
+          icon={<EyeOutlined />}
+          onClick={() => onView(record)}
+          aria-label="查看用户详情"
+        >
+          查看
+        </Button>
+        <Button
+          type="link"
+          icon={<EditOutlined />}
+          onClick={() => onEdit(record)}
+          aria-label="编辑用户"
+        >
+          编辑
+        </Button>
+        <Popconfirm
+          title="确定要删除吗？"
+          onConfirm={() => onDelete(record.id)}
+          okText="确定"
+          cancelText="取消"
+        >
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            aria-label="删除用户"
+          >
+            删除
+          </Button>
+        </Popconfirm>
+      </Space>
+    );
+  }, [onDelete, onEdit, onView]);
+
+  const renderStatusSwitch = useCallback((status, { id }) => {
+    const newStatus = toggleUserStatus(status);
+    return (
+      <Switch
+        size="small"
+        checked={status === USER_STATUS.ENABLED}
+        onChange={() => onStatusChange(id, newStatus)}
+      />
+    );
+  }, [onStatusChange]);
+
   // 使用 useMemo 优化 columns 定义，避免每次渲染都重新创建
   const columns = useMemo(() => [
     {
@@ -52,65 +102,16 @@ const UserTable = memo(({
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => {
-        const { text, color } = formatUserStatus(status);
-        return <span style={{ color }}>{text}</span>;
-      }
+      render: renderStatusSwitch
     },
     {
       title: '操作',
       key: 'action',
       width: 250,
       fixed: TABLE_COLUMNS_CONFIG.action.fixed,
-      render: (_, record) => {
-        const { text, color } = formatUserStatus(record.status);
-        const newStatus = toggleUserStatus(record.status);
-
-        return (
-          <Space>
-            <Button
-              type="link"
-              icon={<EyeOutlined />}
-              onClick={() => onView(record)}
-              aria-label="查看用户详情"
-            >
-              查看
-            </Button>
-            <Button
-              type="link"
-              icon={<EditOutlined />}
-              onClick={() => onEdit(record)}
-              aria-label="编辑用户"
-            >
-              编辑
-            </Button>
-            <Button
-              type="link"
-              onClick={() => onStatusChange(record.id, newStatus)}
-              aria-label={`${record.status === USER_STATUS.ENABLED ? '禁用' : '启用'}用户`}
-            >
-              {record.status === USER_STATUS.ENABLED ? '禁用' : '启用'}
-            </Button>
-            <Popconfirm
-              title="确定要删除吗？"
-              onConfirm={() => onDelete(record.id)}
-              okText="确定"
-              cancelText="取消"
-            >
-              <Button
-                type="link"
-                danger
-                icon={<DeleteOutlined />}
-                aria-label="删除用户"
-              >
-                删除
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      }
+      render: renderAction,
     }
-  ], [onEdit, onView, onDelete, onStatusChange]);
+  ], [renderAction, renderStatusSwitch]);
 
   return (
     <Table
