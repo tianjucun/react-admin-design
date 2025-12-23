@@ -63,6 +63,7 @@ const useUserList = () => {
 
   // 刷新列表
   const refresh = useCallback(() => {
+    console.log('refresh');
     fetchUserList();
   }, [fetchUserList]);
 

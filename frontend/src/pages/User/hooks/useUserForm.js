@@ -94,12 +94,12 @@ const useUserForm = (onSuccess) => {
   const handleSubmit = useCallback(
     async (editingUser, values) => {
       if (editingUser) {
-        return await updateUser(editingUser.id, values);
+        return await handleUpdateUser(editingUser.id, values);
       } else {
-        return await createUser(values);
+        return await handleCreateUser(values);
       }
     },
-    [createUser, updateUser]
+    [handleCreateUser, handleUpdateUser]
   );
 
   return {

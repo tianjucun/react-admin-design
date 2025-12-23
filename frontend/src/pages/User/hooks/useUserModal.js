@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { Form } from 'antd';
 
 /**
  * 用户模态框业务逻辑 Hook
@@ -8,7 +7,6 @@ import { Form } from 'antd';
 const useUserModal = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [form] = Form.useForm();
 
   // 详情模态框相关状态
   const [detailModalVisible, setDetailModalVisible] = useState(false);
@@ -54,7 +52,6 @@ const useUserModal = () => {
     // 编辑模态框
     modalVisible,
     editingUser,
-    form,
     handleAdd,
     handleEdit,
     handleCancel,

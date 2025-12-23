@@ -46,7 +46,6 @@ const User = () => {
   const {
     modalVisible,
     editingUser,
-    form,
     handleAdd,
     handleEdit,
     handleCancel,
@@ -71,7 +70,6 @@ const User = () => {
 
   // 处理状态变更（直接调用 hook 方法，无需额外包装）
   const handleStatusChange = updateUserStatus;
-
   return (
     <div>
       <Space
@@ -112,7 +110,6 @@ const User = () => {
         loading={submitUserIsLoading}
         roles={roles}
         rolesLoading={rolesLoading}
-        form={form}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
       />

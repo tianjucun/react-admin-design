@@ -1,21 +1,22 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { Form, Input, Select, Modal, InputNumber } from 'antd';
 import { MenuType, MenuTypeLabel } from '@/constance';
+import useFormModal from '@/hooks/useFormModal';
 
 const RootMenuId = 0;
 const DefaultSort = 0;
 
-const MenuModal = memo(({ form, editingMenu, parentMenus = [], onCancel, onSubmit, open, loading = false }) => {
-  const initialValues = useMemo(() => {
-    if (editingMenu) {
-      return editingMenu;
-    }
-    return {
+const MenuModal = memo(({ form: externalForm, editingMenu, parentMenus = [], onCancel, onSubmit, open, loading = false }) => {
+  const { form } = useFormModal({
+    open,
+    externalForm,
+    editingData: editingMenu,
+    defaultValues: {
       type: MenuType.DIRECTORY,
       parentId: RootMenuId,
-      sort: DefaultSort,
+      rort: DefaultSort,
     }
-  }, [editingMenu]);
+  })
 
   const renderSelectTypeOptions = useCallback(() => {
     return Object.values(MenuType).map(type => (
@@ -53,8 +54,6 @@ const MenuModal = memo(({ form, editingMenu, parentMenus = [], onCancel, onSubmi
         form={form}
         layout="vertical"
         onFinish={onSubmit}
-        initialValues={initialValues}
-        preserve={false}
       >
         <Form.Item
           name="name"

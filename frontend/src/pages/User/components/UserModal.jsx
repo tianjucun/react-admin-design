@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
 import { FORM_RULES, USER_STATUS, USER_STATUS_TEXT } from '../constants';
+import useFormModal from '@/hooks/useFormModal';
 
 function adaptUserForForm (user) {
   return {
@@ -20,19 +21,17 @@ const UserModal = memo(({
   rolesLoading = false,
   onCancel,
   onSubmit,
-  form,
   loading = false
 }) => {
-  // 使用 useMemo 计算初始值，避免每次渲染都重新创建对象
-  const initialValues = useMemo(() => {
-    if (editingUser) {
-      return adaptUserForForm(editingUser);
-    }
-    // 新增时的默认值
-    return {
+  // 使用通用 hook 处理表单回显
+  const { form } = useFormModal({
+    open,
+    editingData: editingUser,
+    adaptData: adaptUserForForm,
+    defaultValues: {
       status: USER_STATUS.ENABLED,
-    };
-  }, [editingUser]);
+    },
+  });
 
   // 使用 useMemo 优化角色选项，避免每次渲染都重新创建
   const roleOptions = useMemo(() => {
@@ -51,31 +50,20 @@ const UserModal = memo(({
       </Select.Option>
     )), []);
 
-  // 确保 form 实例存在
-  if (!form) {
-    return null;
-  }
-
   return (
     <Modal
       title={editingUser ? '编辑用户' : '新增用户'}
       open={open}
       onCancel={onCancel}
-      onOk={() => form.submit()}
       destroyOnHidden
-      okText="确定"
-      cancelText="取消"
       width={600}
-      loading={loading}
+      okButtonProps={{ loading }}
+      onOk={() => form.submit()}
     >
       <Form
         form={form}
         layout="vertical"
-        initialValues={initialValues}
         onFinish={onSubmit}
-        preserve={false}
-      // 使用 key 确保每次 editingUser 变化时 Form 都会重新初始化
-      // key={editingUser?.id || 'new'}
       >
         <Form.Item
           name="username"

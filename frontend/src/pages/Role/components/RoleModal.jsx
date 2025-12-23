@@ -1,11 +1,20 @@
 import { Modal, Form, Input } from 'antd';
 import { memo } from 'react';
+import useFormModal from '@/hooks/useFormModal';
 
+const RoleModal = memo(({ open, onCancel, onSubmit, editingRole, form: externalForm, loading = false }) => {
+  // 使用通用 hook 处理表单回显
+  // 如果外部传入了 form，使用外部的；否则 hook 内部会创建
+  const { form } = useFormModal({
+    open,
+    editingData: editingRole,
+    externalForm,
+  });
 
-const RoleModal = memo(({ open, onCancel, onSubmit, editingRole, form, loading = false }) => {
   if (!form) {
     return null;
   }
+
   return (
     <Modal
       title={editingRole ? '编辑角色' : '新增角色'}
@@ -17,12 +26,10 @@ const RoleModal = memo(({ open, onCancel, onSubmit, editingRole, form, loading =
       cancelText="取消"
       okButtonProps={{ loading }}
       width={600}
-    // loading={loading}
     >
       <Form
         form={form}
         layout="vertical"
-        initialValues={editingRole}
         onFinish={onSubmit}
         preserve={false}
         autoComplete="off"
