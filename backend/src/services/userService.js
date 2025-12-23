@@ -5,7 +5,13 @@ const { Op } = require('sequelize');
  * 获取用户列表
  */
 const getUserList = async (params) => {
-  const { page = 1, pageSize = 10, keyword = '' } = params;
+  const {
+    page = 1,
+    pageSize = 10,
+    keyword = '',
+    status = -1,
+    roleId = -1,
+  } = params;
   const offset = (page - 1) * pageSize;
 
   const where = {};
@@ -15,6 +21,14 @@ const getUserList = async (params) => {
       { nickname: { [Op.like]: `%${keyword}%` } },
       { email: { [Op.like]: `%${keyword}%` } },
     ];
+  }
+
+  if (status !== -1) {
+    where.status = status;
+  }
+
+  if (roleId !== -1) {
+    where.roleId = roleId;
   }
 
   const { count, rows } = await User.findAndCountAll({

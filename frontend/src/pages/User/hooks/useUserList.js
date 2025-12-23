@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { message } from 'antd';
+import { Form, message } from 'antd';
 import { getUserList } from '@/api/user';
 import { DEFAULT_PAGINATION } from '../constants';
 
@@ -13,16 +13,18 @@ const useUserList = () => {
   const [total, setTotal] = useState(0);
   const [current, setCurrent] = useState(DEFAULT_PAGINATION.current);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.pageSize);
-  const [keyword, setKeyword] = useState('');
+
+  const [searchForm] = Form.useForm();
 
   // 获取用户列表
   const fetchUserList = useCallback(async () => {
     setLoading(true);
     try {
+      const searchValues = searchForm.getFieldsValue();
       const result = await getUserList({
         page: current,
         pageSize,
-        keyword,
+        ...searchValues,
       });
       setDataSource(result.list || []);
       setTotal(result.total || 0);
@@ -32,7 +34,7 @@ const useUserList = () => {
     } finally {
       setLoading(false);
     }
-  }, [current, pageSize, keyword]);
+  }, [current, pageSize, searchForm]);
 
   // 当分页或搜索条件变化时，重新获取数据
   useEffect(() => {
@@ -51,17 +53,30 @@ const useUserList = () => {
   );
 
   // 更新搜索关键词
-  const handleSearch = useCallback((value) => {
-    setKeyword(value);
-    setCurrent(1); // 搜索时重置到第一页
-  }, []);
+  const handleSearch = useCallback(() => {
+    if (current !== DEFAULT_PAGINATION.current) {
+      setCurrent(DEFAULT_PAGINATION.current);
+      return;
+    }
+    fetchUserList();
+  }, [fetchUserList, current]);
 
   // 刷新列表
   const refresh = useCallback(() => {
     fetchUserList();
   }, [fetchUserList]);
 
+  const handleReset = useCallback(() => {
+    searchForm.resetFields();
+    if (current !== DEFAULT_PAGINATION.current) {
+      setCurrent(DEFAULT_PAGINATION.current);
+      return;
+    }
+    fetchUserList();
+  }, [searchForm, current, fetchUserList]);
+
   return {
+    searchForm,
     dataSource,
     loading,
     total,
@@ -69,9 +84,9 @@ const useUserList = () => {
       current,
       pageSize,
     },
-    keyword,
     handlePageChange,
     handleSearch,
+    handleReset,
     refresh,
   };
 };

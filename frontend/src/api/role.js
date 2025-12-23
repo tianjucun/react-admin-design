@@ -3,8 +3,12 @@ import request from '@/utils/request';
 /**
  * 获取角色列表
  */
-export const getRoleList = () => {
-  return request.get('/roles');
+export const getRoleList = (params) => {
+  return request.get('/roles', { params });
+};
+
+export const getAllRoles = () => {
+  return request.get('/roles/options');
 };
 
 /**

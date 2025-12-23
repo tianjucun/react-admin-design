@@ -9,6 +9,7 @@ router.use(authMiddleware);
 router.use(loggerMiddleware);
 
 router.get('/', roleController.getRoleList);
+router.get('/options', roleController.getAllRoleOptions);
 router.get('/:id', roleController.getRoleDetail);
 router.post('/', roleController.createRole);
 router.put('/:id', roleController.updateRole);
@@ -16,4 +17,3 @@ router.delete('/:id', roleController.deleteRole);
 router.post('/:id/permissions', roleController.assignPermissions);
 
 module.exports = router;
-

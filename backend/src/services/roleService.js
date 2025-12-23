@@ -21,6 +21,13 @@ const getRoleList = async (params) => {
   };
 };
 
+const getAllRoleOptions = async () => {
+  const roles = await Role.findAll({
+    attributes: ['id', 'name'],
+  });
+  return roles;
+};
+
 /**
  * 获取角色详情（包含权限）
  */
@@ -139,4 +146,5 @@ module.exports = {
   updateRole,
   deleteRole,
   assignPermissions,
+  getAllRoleOptions,
 };

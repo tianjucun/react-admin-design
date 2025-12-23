@@ -44,14 +44,12 @@ const UserModal = memo(({
   }, [roles]);
 
   // 状态选项
-  const statusOptions = useMemo(() => [
-    <Select.Option key={USER_STATUS.ENABLED} value={USER_STATUS.ENABLED}>
-      {USER_STATUS_TEXT[USER_STATUS.ENABLED]}
-    </Select.Option>,
-    <Select.Option key={USER_STATUS.DISABLED} value={USER_STATUS.DISABLED}>
-      {USER_STATUS_TEXT[USER_STATUS.DISABLED]}
-    </Select.Option>
-  ], []);
+  const statusOptions = useMemo(() =>
+    Object.values(USER_STATUS).map(status => (
+      <Select.Option key={status} value={status}>
+        {USER_STATUS_TEXT[status]}
+      </Select.Option>
+    )), []);
 
   // 确保 form 实例存在
   if (!form) {

@@ -8,6 +8,7 @@ import UserSearchBar from './components/UserSearchBar';
 import UserTable from './components/UserTable';
 import UserModal from './components/UserModal';
 import UserDetailModal from './components/UserDetailModal';
+import { useRoleList } from './hooks/useRoleList';
 
 /**
  * 用户管理页面主组件
@@ -19,14 +20,17 @@ import UserDetailModal from './components/UserDetailModal';
  * 3. UI 组件只负责展示和事件传递
  */
 const User = () => {
+  const { roles, loading: rolesLoading } = useRoleList();
   // 列表相关逻辑
   const {
+    searchForm,
     dataSource,
     loading,
     total,
     pagination,
     handlePageChange,
     handleSearch,
+    handleReset,
     refresh
   } = useUserList();
 
@@ -43,8 +47,6 @@ const User = () => {
     modalVisible,
     editingUser,
     form,
-    roles,
-    rolesLoading,
     handleAdd,
     handleEdit,
     handleCancel,
@@ -76,7 +78,13 @@ const User = () => {
         style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}
         size="middle"
       >
-        <UserSearchBar onSearch={handleSearch} />
+        <UserSearchBar
+          form={searchForm}
+          onSearch={handleSearch}
+          onReset={handleReset}
+          roles={roles}
+          rolesLoading={rolesLoading}
+        />
         <Button
           type="primary"
           icon={<PlusOutlined />}

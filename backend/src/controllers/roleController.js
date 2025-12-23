@@ -13,6 +13,15 @@ const getRoleList = async (req, res) => {
   }
 };
 
+const getAllRoleOptions = async (_, res) => {
+  try {
+    const roles = await roleService.getAllRoleOptions();
+    res.json(success(roles, '获取成功'));
+  } catch (err) {
+    res.status(400).json(error(err.message, 400));
+  }
+};
+
 /**
  * 获取角色详情
  */
@@ -85,4 +94,5 @@ module.exports = {
   updateRole,
   deleteRole,
   assignPermissions,
+  getAllRoleOptions,
 };
